@@ -7,5 +7,6 @@ FROM openjdk:17-jdk-slim
 
 COPY --from=build /app/target/JBS-0.1.jar.original app.jar
 
-EXPOSE 8081
+EXPOSE 8080
+
 ENTRYPOINT ["java", "-jar", "app.jar"]
