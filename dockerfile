@@ -1,13 +1,13 @@
-FROM jenkins/jenkins:jdk17
+# Build package stage
+FROM maven:3.8.3-openjdk-17 as build
 
-USER root
+COPY . .
+RUN mvn clean package -DskipTests
 
-RUN apt-get update
+# Pacakgae stage
+FROM openjdk:17-jdk-slim
 
-USER jenkins
+COPY --from=build /target/JBS-0.1.jar app.jar
 
-COPY . /var/jenkins_home/workspace/seu-projeto
-
-EXPOSE 8081
-
-CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
+EXPOSE 5500
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
