@@ -1,12 +1,13 @@
-FROM maven:3.8.3-openjdk-17 as build
+FROM jenkins/jenkins:jdk17
 
-COPY . .
-RUN mvn clean package -DskipTests
+USER root
 
-FROM openjdk:17-jdk-slim
+RUN apt-get update
 
-COPY --from=build /app/target/JBS-0.1.jar.original app.jar
+USER jenkins
+
+COPY . /var/jenkins_home/workspace/seu-projeto
 
 EXPOSE 8081
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "/usr/share/jenkins/jenkins.war"]
